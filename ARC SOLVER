@@ -1,0 +1,35 @@
+import numpy as np
+from metrics import iou_score, centroid_error, compute_psi
+
+class ARCSolver:
+    def __init__(self, task_data):
+        self.task = task_data
+        self.input_grid = np.array(task_data['train'][0]['input'])
+        self.output_grid = np.array(task_data['train'][0]['output'])
+        
+    def extract_objects(self, grid):
+        """Minimal connected-component extraction for HUSE"""
+        # (Simplified for scaffold; usually involves cv2 or custom labeling)
+        objects = [] 
+        # Logic to find non-zero clusters...
+        return objects
+
+    def propose_transformation(self, psi):
+        """Lambda (Λ) Impulse: Generate a candidate grid based on trust state"""
+        # If psi is high, follow geometric symmetry
+        # If psi is low, explore color-mapping or scaling
+        candidate = self.input_grid.copy() 
+        # Apply transformation logic...
+        return candidate
+
+    def step(self, current_psi):
+        """A single iteration of the Master of Harmony loop"""
+        candidate = self.propose_transformation(current_psi)
+        
+        # Calculate HUSE Metrics
+        match = iou_score(candidate, self.output_grid)
+        # Assuming centroid_error takes object lists
+        error = centroid_error(self.extract_objects(candidate), 
+                               self.extract_objects(self.output_grid))
+        
+        return candidate, match, error
