@@ -1,0 +1,199 @@
+# Harmonia Universitas
+
+**A personal research framework for coherence-based intelligence systems.**  
+*Author: Gregory Elvis Graziano | License: GPL-3.0*
+
+---
+
+## What This Is
+
+Harmonia Universitas (HU) is an independent research framework exploring a central question:
+
+> **Can a coherence metric predict whether an intelligent system's outputs are stable and reliable — not just locally correct?**
+
+The framework develops the operator **ψ (psi)** — a coherence gate designed to distinguish genuine solution stability from confident-but-fragile performance. The core concern is **ψ drift**: the failure mode where a system's internal confidence metric decouples from reality over time, producing high-confidence outputs that collapse under perturbation or repetition.
+
+This is not a philosophical claim. It is an empirically testable hypothesis. This repository contains the formal pre-registration and implementation scaffold for the first test.
+
+---
+
+## Core Formalism
+
+### The ψ Operator
+
+$$\psi = \sigma(\alpha \cdot m - \beta \cdot e - \gamma \cdot H)$$
+
+Where:
+
+| Symbol | Meaning |
+|--------|---------|
+| `m` | Match score — binary correctness of output |
+| `e` | Error term — composite of consistency and adversarial error (independent of m) |
+| `H` | Entropy — distributional entropy of candidate solution scores |
+| `σ` | Sigmoid activation |
+| `α, β, γ` | Pre-registered coefficients |
+
+### The Error Term (decoupled from m)
+
+$$e = w_1 \cdot e_{cons} + w_2 \cdot e_{adv}$$
+
+- **e_cons** — Consistency error: variance across K repeated runs on identical input
+- **e_adv** — Adversarial error: performance degradation under structured perturbation
+
+The critical design constraint: **e must be independent of m**. If e = 1 − m, ψ collapses to a one-dimensional signal and cannot distinguish confidence from correctness. This is the mathematical root of ψ drift.
+
+### The Guardian Triad
+
+ψ is enforced through a three-role architecture:
+
+- **G₁ (Generator)** — Produces candidate outputs
+- **G₂ (Adversary)** — Applies structured perturbations to stress-test outputs
+- **G₃ (Judge)** — Evaluates outputs via ψ and gates acceptance/recursion
+
+Without this structure, systems optimize blindly, errors compound, and confidence metrics self-validate noise. The Adversary's structural independence from the Generator-Judge loop is what prevents ψ drift from propagating.
+
+---
+
+## The Central Falsifiable Claim
+
+> ψ positively correlates with task success under both baseline and adversarial conditions, with limited degradation under perturbation.
+
+**Detection signal — Coherence-Outcome Divergence (COD):**
+
+$$\text{corr}(\psi_t, O_t) \text{ over window } N$$
+
+If ψ is valid: corr(ψ, outcome) stays positive under both baseline and adversarial conditions.  
+If ψ is drifting: baseline correlation holds but adversarial correlation collapses toward zero.
+
+---
+
+## Repository Structure
+
+```
+/
+├── README.md                          ← This file
+├── LICENSE                            ← GPL-3.0
+├── HU-PR-01                           ← Pre-registration document (plain text)
+├── ψ Coherence Validation Under Perturbation   ← Experiment specification
+└── HU_PR_01_scaffold.py              ← Python implementation scaffold
+```
+
+---
+
+## Experiment HU-PR-01
+
+**Status: Pre-registered. Awaiting execution.**
+
+The first formal experiment tests whether ψ predicts outcome stability under perturbation across 25 ARC-style tasks.
+
+### Pre-Registered Parameters
+
+| Parameter | Value |
+|-----------|-------|
+| w₁ (consistency weight) | 0.5 |
+| w₂ (adversarial weight) | 0.5 |
+| α, β, γ | 1.0, 1.0, 1.0 |
+| K (runs per task) | 5 |
+| N (tasks) | 25 |
+| Perturbations | Rotation ×3, color permutation, partial occlusion |
+| Correlation method | Spearman |
+
+### Success Criteria
+
+| Metric | Threshold |
+|--------|-----------|
+| corr(ψ, outcome_baseline) | ≥ 0.3 |
+| corr(ψ, outcome_adv) | ≥ 0.2 |
+| ratio (adv / baseline) | ≥ 0.5 |
+
+### Falsification Condition
+
+ψ is considered invalid or drifting if:
+- corr(ψ, outcome_adv) ≤ 0.1, **OR**
+- ratio (adv / baseline) < 0.5
+
+**Non-retuning clause:** No modification of weights, coefficients, perturbation set, or dataset is permitted after observing results. Any change requires a new experiment ID and new pre-registration.
+
+---
+
+## What Is Established vs. Open
+
+### Established (structural)
+- ψ drift is a real failure mode with an identifiable mathematical cause (e-m coupling)
+- The Guardian Triad provides a structurally sound architecture for preventing drift propagation
+- COD (Coherence-Outcome Divergence) is a valid falsification signal
+- The pre-registration (HU-PR-01) is committed and timestamped prior to execution
+
+### Being Tested (HU-PR-01)
+- Whether ψ as defined actually tracks reality under adversarial stress
+- Whether the corr(ψ, outcome) signal is measurable and stable across tasks
+- Whether the ratio criterion (≥ 0.5) holds under structured perturbation
+
+### Open Questions
+- Optimal weighting of e_cons vs e_adv for different task classes
+- Whether ψ generalizes beyond ARC-style tasks
+- Relationship between ψ and thermalization dynamics in quasiperiodic systems (longer-term)
+- Experimental realization in physical systems (Rydberg atom arrays)
+
+---
+
+## Relationship to Existing Literature
+
+HU addresses a gap that appears across multiple fields under different names:
+
+| Field | Analogous Problem |
+|-------|------------------|
+| Reinforcement learning | Reward hacking — agent games the metric |
+| GANs | Mode collapse — generator fools discriminator without diversity |
+| LLMs | Sycophancy — model drifts toward user validation |
+| Control theory | Sensor drift — confidence metric decouples from plant state |
+
+The contribution of HU is a unified formal treatment of this failure mode (ψ drift) and a falsifiable metric (ψ) designed to detect and gate against it.
+
+---
+
+## How to Run HU-PR-01
+
+```bash
+# Install dependencies
+pip install numpy scipy
+
+# Replace solve_task() in scaffold with your ARC solver, then:
+python HU_PR_01_scaffold.py
+```
+
+Results are written to:
+- `HU_PR_01_results.csv` — full per-run log
+- `HU_PR_01_results_summary.json` — correlation metrics and verdict
+- SHA-256 hash of results file printed at completion (integrity verification)
+
+---
+
+## Versioning and Integrity
+
+All pre-registrations are committed to this repository **before execution**. The GitHub commit hash serves as the immutable timestamp. Results files include a SHA-256 hash for post-hoc integrity verification.
+
+Any modification to pre-registered parameters requires:
+1. A new experiment ID (e.g., HU-PR-02)
+2. A new pre-registration committed before execution
+3. A clear note in the results documenting what changed and why
+
+---
+
+## Status
+
+| Item | Status |
+|------|--------|
+| Framework formalization | ✅ Complete |
+| HU-PR-01 pre-registration | ✅ Committed |
+| Python scaffold | ✅ Complete |
+| ARC solver integration | 🔲 Pending |
+| HU-PR-01 execution | 🔲 Pending |
+| Results analysis | 🔲 Pending |
+
+---
+
+## Contact
+
+This is independent research. Issues and discussion are open.  
+Framework author: Gregory Elvis Graziano
