@@ -1,0 +1,15 @@
+# Inside harmonia_agent.py (v3)
+def run_real_experiment(benchmark_files):
+    solver = ARCSolver(load_json(benchmark_files[0]))
+    psi = 0.5 # Start at neutral coherence
+    
+    for t in range(MAX_STEPS):
+        grid, match, error = solver.step(psi)
+        
+        # Calculate PSI using the metrics.py formula
+        # Note: action_entropy comes from the solver's policy distribution
+        psi = compute_psi(match, error, action_entropy=0.1) 
+        
+        if match > 0.99:
+            print(f"Task Solved in {t} steps.")
+            break
