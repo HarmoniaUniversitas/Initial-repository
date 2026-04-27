@@ -1,0 +1,84 @@
+Here’s your one-page pre-registration, clean, executable, and defensible.
+HU-PR-01 — Pre-Registration: ψ Coherence Validation Under Perturbation
+Project: Harmonia Universitas Experiment ID: HU-PR-01 Date: April 24, 2026 Objective: To test whether the coherence metric ψ predicts outcome stability under perturbation, thereby establishing ψ as a falsifiable indicator of system reliability.
+1. Hypothesis
+ψ positively correlates with task success under both baseline and adversarial conditions, with limited degradation under perturbation.
+2. Definitions
+
+* ψ (Coherence): [ \psi = \sigma(\alpha \cdot m - \beta \cdot e - \gamma \cdot H) ]
+* m (Match Score): Binary correctness of output (1 = correct, 0 = incorrect)
+* e (Error Term): [ e = w_1 e_{cons} + w_2 e_{adv} ]
+   * e_cons (Consistency Error): Variance of outputs across K repeated runs on identical input
+   * e_adv (Adversarial Error): Performance degradation between baseline and perturbed inputs
+* H (Entropy): Distributional entropy of candidate solution scores
+3. Fixed Parameters (Pre-Registered)
+
+* Weights:
+   * ( w_1 = 0.5 ) (consistency)
+   * ( w_2 = 0.5 ) (adversarial)
+* ψ Coefficients:
+   * ( \alpha = 1.0 ), ( \beta = 1.0 ), ( \gamma = 1.0 )
+* Runs per Task:
+   * ( K = 5 )
+4. Dataset
+
+* Fixed subset of ARC-style tasks
+* Total tasks: N = 25
+* Task IDs: (to be listed explicitly in implementation and not altered)
+5. Perturbation Operators (Fixed Set)
+Each input will be tested under:
+
+1. Rotation (90°, 180°, 270°)
+2. Color permutation (fixed mapping)
+3. Partial occlusion (≤10% grid masking)
+No additional perturbations will be introduced post-registration.
+6. Procedure
+For each task and each of K runs:
+
+1. Solve baseline input
+2. Solve perturbed input
+3. Log:
+   * ψ
+   * outcome_baseline ∈ {0,1}
+   * outcome_adv ∈ {0,1}
+7. Metrics
+
+* Baseline Correlation: corr(ψ, outcome_baseline)
+* Adversarial Correlation: corr(ψ, outcome_adv)
+8. Success Criteria
+ψ is considered valid if:
+
+* corr(ψ, outcome_baseline) ≥ 0.3
+* corr(ψ, outcome_adv) ≥ 0.2
+* corr(ψ, outcome_adv) / corr(ψ, outcome_baseline) ≥ 0.5
+9. Failure Criteria (Falsification Condition)
+ψ is considered invalid or drifting if:
+
+* corr(ψ, outcome_adv) ≤ 0.1 OR
+* corr(ψ, outcome_adv) / corr(ψ, outcome_baseline) < 0.5
+10. Non-Retuning Clause
+
+* No modification of:
+   * weights ( w_1, w_2 )
+   * ψ coefficients ( \alpha, \beta, \gamma )
+   * perturbation set
+   * dataset
+after observing results.
+Any change requires:
+
+* new experiment ID
+* new pre-registration
+11. Commitment Statement
+If failure criteria are met, ψ as currently defined will be abandoned or formally redefined, and a new pre-registered experiment will be conducted.
+12. Timestamp & Record Integrity
+This document must be:
+
+* committed to a version-controlled repository prior to execution
+* or exported as a timestamped PDF
+No retroactive edits permitted.
+Status: READY FOR EXECUTION
+If you want next step, I can:
+
+* generate the exact Python scaffold that logs and computes these metrics
+* or format this into a publication-ready Methods section
+This is now at the level where results—good or bad—actually mean something.
